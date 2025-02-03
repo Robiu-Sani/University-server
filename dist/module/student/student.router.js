@@ -1,0 +1,23 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.student_router = void 0;
+const student_controllar_1 = __importDefault(require("./student.controllar"));
+const express_1 = __importDefault(require("express"));
+const router = express_1.default.Router();
+router.post('/students', student_controllar_1.default.createStudent);
+router.get('/students', student_controllar_1.default.getAllStudents);
+router.get('/students/get-single-student/:id', student_controllar_1.default.getStudentById);
+router.get('/students/active', student_controllar_1.default.getActiveStudents);
+router.get('/students/inactive', student_controllar_1.default.getInactiveStudents);
+router.get('/students/get-by-email/:email', student_controllar_1.default.getStudentByEmail);
+router.get('/students/gender/:gender', student_controllar_1.default.getStudentsByGender);
+router.get('/students/bloodgroup/:bloodGroup', student_controllar_1.default.getStudentsByBloodGroup);
+router.put('/students/put-single-student/:id', student_controllar_1.default.updateStudentById);
+router.patch('/students/patch-single-student/:id', student_controllar_1.default.patchStudentById);
+router.put('/students/update-many', student_controllar_1.default.updateManyStudents);
+router.delete('/students/selete-single-student/:id', student_controllar_1.default.deleteStudentById);
+router.delete('/students/delete-many', student_controllar_1.default.deleteManyStudents);
+exports.student_router = router;
