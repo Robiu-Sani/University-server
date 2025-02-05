@@ -4,7 +4,15 @@ import Student from './student.model';
 // Create a new student
 const createStudentDB = async (studentData: studentInterface) => {
   const student = new Student(studentData);
+
+  if (await student.isStudentExits(studentData.id)) {
+    throw new Error('User is alrady exist');
+  }
+
   return await student.save();
+
+  // const result = await Student.create(studentData)
+  // return result
 };
 
 // Get all students

@@ -13,10 +13,14 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const student_services_1 = __importDefault(require("./student.services"));
+const student_validation_1 = require("./student.validation");
 // Create a new student
 const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const student = yield student_services_1.default.createStudentDB(req.body);
+        const payload = req.body;
+        const zodparsedData = student_validation_1.studentSchemaZod.parse(payload);
+        // const student = await studentServices.createStudentDB(payload);
+        const student = yield student_services_1.default.createStudentDB(zodparsedData);
         res.status(201).json(student);
     }
     catch (error) {

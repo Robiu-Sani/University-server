@@ -16,7 +16,12 @@ const student_model_1 = __importDefault(require("./student.model"));
 // Create a new student
 const createStudentDB = (studentData) => __awaiter(void 0, void 0, void 0, function* () {
     const student = new student_model_1.default(studentData);
+    if (yield student.isStudentExits(studentData.id)) {
+        throw new Error('User is alrady exist');
+    }
     return yield student.save();
+    // const result = await Student.create(studentData)
+    // return result
 });
 // Get all students
 const getAllStudentsDB = () => __awaiter(void 0, void 0, void 0, function* () {

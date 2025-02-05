@@ -1,82 +1,108 @@
-import mongoose from 'mongoose';
-import { studentInterface } from './student.interface';
+import mongoose, { Schema } from 'mongoose';
+import {
+  instanceStudentMethod,
+  intanceStudentModel,
+  studentInterface,
+} from './student.interface';
 
-const studentSchema = new mongoose.Schema<studentInterface>({
-  id: {
+// Define Sub-schemas
+const NameSchema = new Schema({
+  firstName: {
     type: String,
-    required: true,
-    unique: true,
+    required: [true, 'First name is required'],
+    minlength: [2, 'First name must be at least 2 characters'],
   },
+  middleName: {
+    type: String,
+  },
+  lastName: {
+    type: String,
+    required: [true, 'Last name is required'],
+    minlength: [2, 'Last name must be at least 2 characters'],
+  },
+});
+
+const GuardianSchema = new Schema({
   name: {
-    firstName: {
-      type: String,
-      required: true,
-    },
-    middleName: {
-      type: String,
-      required: false, // Optional
-    },
-    lastName: {
-      type: String,
-      required: true,
-    },
-  },
-  gender: {
     type: String,
-    enum: ['male', 'female'],
-    required: true,
+    required: [true, "Guardian's name is required"],
   },
-  email: {
+  occupation: {
     type: String,
-    required: true,
-    unique: true,
-  },
-  avatar: {
-    type: String,
-    required: false,
-  },
-  dateOfBirth: {
-    type: String,
-    required: true,
+    required: [true, "Guardian's occupation is required"],
   },
   contactNumber: {
     type: String,
-    required: true,
+    required: [true, "Guardian's contact number is required"],
+    match: [/^01[3-9]\d{8}$/, 'Please enter a valid contact number'],
+  },
+});
+
+// Main Schema
+const studentSchema = new Schema<
+  studentInterface,
+  intanceStudentModel,
+  instanceStudentMethod
+>({
+  id: {
+    type: String,
+    required: [true, 'Student ID is required'],
+    unique: true,
+    minlength: [4, 'ID must be at least 4 characters long'],
+    maxlength: [10, 'ID cannot exceed 10 characters'],
+  },
+  name: NameSchema,
+  gender: {
+    type: String,
+    enum: ['male', 'female'],
+    required: [true, 'Gender is required'],
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+    match: [/\S+@\S+\.\S+/, 'Please enter a valid email address'],
+  },
+  avatar: {
+    type: String,
+    match: [/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/, 'Invalid avatar URL'],
+  },
+  dateOfBirth: {
+    type: String,
+    required: [true, 'Date of Birth is required'],
+  },
+  contactNumber: {
+    type: String,
+    required: [true, 'Contact number is required'],
+    match: [
+      /^01[3-9]\d{8}$/,
+      'Please enter a valid Bangladeshi contact number',
+    ],
   },
   emergencyContactNumber: {
     type: String,
-    required: true,
+    required: [true, 'Emergency contact number is required'],
+    match: [/^01[3-9]\d{8}$/, 'Please enter a valid emergency contact number'],
   },
   bloodGroup: {
     type: String,
     enum: ['A+', 'O+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O-'],
-    required: false, // Optional
   },
   presentAddress: {
     type: String,
-    required: true,
+    required: [true, 'Present address is required'],
+    minlength: [5, 'Address must be at least 5 characters long'],
   },
-  parmanentAddress: {
+  permanentAddress: {
+    // Fixed Typo
     type: String,
-    required: true,
+    required: [true, 'Permanent address is required'],
+    minlength: [5, 'Address must be at least 5 characters long'],
   },
-  guardian: {
-    name: {
-      type: String,
-      required: true,
-    },
-    occupation: {
-      type: String,
-      required: true,
-    },
-    contactNumber: {
-      type: String,
-      required: true,
-    },
-  },
+  guardian: GuardianSchema,
   profileImage: {
     type: String,
-    required: false, // Optional
+    match: [/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/, 'Invalid profile image URL'],
   },
   isActive: {
     type: String,
@@ -85,8 +111,18 @@ const studentSchema = new mongoose.Schema<studentInterface>({
   },
 });
 
-// Create the Mongoose model
-const Student = mongoose.model<studentInterface>('Student', studentSchema);
+//defining
 
-// Export the model
+studentSchema.methods.isStudentExits = async (id: string) => {
+  const isExistStudent = Student.findOne({ id });
+
+  return isExistStudent;
+};
+
+// Model Creation
+const Student = mongoose.model<studentInterface, intanceStudentModel>(
+  'Student',
+  studentSchema,
+);
+
 export default Student;

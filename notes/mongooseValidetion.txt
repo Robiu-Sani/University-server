@@ -1,0 +1,119 @@
+import mongoose from 'mongoose';
+import { studentInterface } from './student.interface';
+
+const studentSchema = new mongoose.Schema<studentInterface>({
+  id: {
+    type: String,
+    required: [true, 'Student ID is required'],
+    unique: true,
+    minlength: [4, 'ID must be at least 4 characters long'],
+    maxlength: [10, 'ID cannot exceed 10 characters'],
+  },
+  name: {
+    firstName: {
+      type: String,
+      required: [true, 'First name is required'],
+      minlength: [2, 'First name must be at least 2 characters'],
+    },
+    middleName: {
+      type: String,
+      required: false,
+    },
+    lastName: {
+      type: String,
+      required: [true, 'Last name is required'],
+      minlength: [2, 'Last name must be at least 2 characters'],
+    },
+  },
+  gender: {
+    type: String,
+    enum: {
+      values: ['male', 'female'],
+      message: 'Gender must be either male or female',
+    },
+    required: [true, 'Gender is required'],
+  },
+  email: {
+    type: String,
+    required: [true, 'Email is required'],
+    unique: true,
+    match: [/\S+@\S+\.\S+/, 'Please enter a valid email address'],
+  },
+  avatar: {
+    type: String,
+    required: false,
+    match: [/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/, 'Invalid avatar URL'],
+  },
+  dateOfBirth: {
+    type: String,
+    required: [true, 'Date of Birth is required'],
+    validate: {
+      validator: function (value) {
+        return /\d{4}-\d{2}-\d{2}/.test(value); // YYYY-MM-DD format
+      },
+      message: 'Date of Birth must be in YYYY-MM-DD format',
+    },
+  },
+  contactNumber: {
+    type: String,
+    required: [true, 'Contact number is required'],
+    match: [/^01[3-9]\d{8}$/, 'Please enter a valid Bangladeshi contact number'],
+  },
+  emergencyContactNumber: {
+    type: String,
+    required: [true, 'Emergency contact number is required'],
+    match: [/^01[3-9]\d{8}$/, 'Please enter a valid emergency contact number'],
+  },
+  bloodGroup: {
+    type: String,
+    enum: {
+      values: ['A+', 'O+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O-'],
+      message: 'Invalid blood group',
+    },
+    required: false,
+  },
+  presentAddress: {
+    type: String,
+    required: [true, 'Present address is required'],
+    minlength: [5, 'Address must be at least 5 characters long'],
+  },
+  parmanentAddress: {
+    type: String,
+    required: [true, 'Permanent address is required'],
+    minlength: [5, 'Address must be at least 5 characters long'],
+  },
+  guardian: {
+    name: {
+      type: String,
+      required: [true, "Guardian's name is required"],
+    },
+    occupation: {
+      type: String,
+      required: [true, "Guardian's occupation is required"],
+    },
+    contactNumber: {
+      type: String,
+      required: [true, "Guardian's contact number is required"],
+      match: [/^01[3-9]\d{8}$/, 'Please enter a valid contact number'],
+    },
+  },
+  profileImage: {
+    type: String,
+    required: false,
+    match: [/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/, 'Invalid profile image URL'],
+  },
+  isActive: {
+    type: String,
+    enum: {
+      values: ['active', 'inActive'],
+      message: 'Status must be either active or inActive',
+    },
+    default: 'active',
+  },
+});
+
+// Create the Mongoose model
+const Student = mongoose.model<studentInterface>('Student', studentSchema);
+
+// Export the model
+export default Student;

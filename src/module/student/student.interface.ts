@@ -1,8 +1,10 @@
+import { Model } from 'mongoose';
+
 export interface studentInterface {
   id: string;
   name: {
     firstName: string;
-    middleName: string;
+    middleName?: string;
     lastName: string;
   };
   gender: 'male' | 'female';
@@ -13,7 +15,7 @@ export interface studentInterface {
   emergencyContactNumber: string;
   bloodGroup?: 'A+' | 'O+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O-';
   presentAddress: string;
-  parmanentAddress: string;
+  permanentAddress: string;
   guardian: {
     name: string;
     occupation: string;
@@ -22,3 +24,12 @@ export interface studentInterface {
   profileImage?: string;
   isActive: 'active' | 'inActive';
 }
+
+export interface instanceStudentMethod {
+  isStudentExits(id: string): Promise<studentInterface | null>;
+}
+export type intanceStudentModel = Model<
+  studentInterface,
+  Record<string, never>,
+  instanceStudentMethod
+>;

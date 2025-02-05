@@ -1,0 +1,7 @@
+validator
+
+npm i -d  @types/validator
+
+npm i joi
+
+npm install zod

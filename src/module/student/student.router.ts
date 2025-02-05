@@ -3,8 +3,8 @@ import express from 'express';
 
 const router = express.Router();
 
-router.post('/students', studentController.createStudent);
-router.get('/students', studentController.getAllStudents);
+router.post('/create', studentController.createStudent);
+router.get('/', studentController.getAllStudents);
 router.get(
   '/students/get-single-student/:id',
   studentController.getStudentById,

@@ -15,11 +15,14 @@
   "license": "ISC",
   "description": "",
   "dependencies": {
+    "@types/validator": "^13.12.2",
     "cors": "^2.8.5",
     "dotenv": "^16.4.7",
     "express": "^4.21.2",
+    "joi": "^17.13.3",
     "mongoose": "^8.9.6",
-    "ts-node-dev": "^2.0.0"
+    "ts-node-dev": "^2.0.0",
+    "zod": "^3.24.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.19.0",
