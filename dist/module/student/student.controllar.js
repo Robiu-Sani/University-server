@@ -13,140 +13,130 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const student_services_1 = __importDefault(require("./student.services"));
-const student_validation_1 = require("./student.validation");
-// Create a new student
-const createStudent = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const payload = req.body;
-        const zodparsedData = student_validation_1.studentSchemaZod.parse(payload);
-        // const student = await studentServices.createStudentDB(payload);
-        const student = yield student_services_1.default.createStudentDB(zodparsedData);
-        res.status(201).json(student);
-    }
-    catch (error) {
-        res.status(400).json({ error });
-    }
-});
-// Get all students
-const getAllStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const students = yield student_services_1.default.getAllStudentsDB();
-        res.status(200).json(students);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Get a single student by ID
-const getStudentById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const student = yield student_services_1.default.getStudentByIdDB(req.params.id);
-        res.status(200).json(student);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Get all active students
-const getActiveStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const students = yield student_services_1.default.getActiveStudentsDB();
-        res.status(200).json(students);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Get all inactive students
-const getInactiveStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const students = yield student_services_1.default.getInactiveStudentsDB();
-        res.status(200).json(students);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Get a student by email
-const getStudentByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const student = yield student_services_1.default.getStudentByEmailDB(req.params.email);
-        res.status(200).json(student);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Get students by gender
-const getStudentsByGender = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const students = yield student_services_1.default.getStudentsByGenderDB(req.params.gender);
-        res.status(200).json(students);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Get students by blood group
-const getStudentsByBloodGroup = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const students = yield student_services_1.default.getStudentsByBloodGroupDB(req.params.bloodGroup);
-        res.status(200).json(students);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Update a student by ID (PUT)
-const updateStudentById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const student = yield student_services_1.default.updateStudentByIdDB(req.params.id, req.body);
-        res.status(200).json(student);
-    }
-    catch (error) {
-        res.status(400).json({ error });
-    }
-});
-// Update a student by ID (PATCH)
-const patchStudentById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const student = yield student_services_1.default.patchStudentByIdDB(req.params.id, req.body);
-        res.status(200).json(student);
-    }
-    catch (error) {
-        res.status(400).json({ error });
-    }
-});
-// Update many students
-const updateManyStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield student_services_1.default.updateManyStudentsDB(req.body.filter, req.body.updateData);
-        res.status(200).json(result);
-    }
-    catch (error) {
-        res.status(400).json({ error });
-    }
-});
-// Delete a student by ID
-const deleteStudentById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const student = yield student_services_1.default.deleteStudentByIdDB(req.params.id);
-        res.status(200).json({ message: 'Student deleted successfully', student });
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
-// Delete many students
-const deleteManyStudents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const result = yield student_services_1.default.deleteManyStudentsDB(req.body.filter);
-        res.status(200).json(result);
-    }
-    catch (error) {
-        res.status(500).json({ error });
-    }
-});
+const sendResponse_1 = __importDefault(require("../../utils/sendResponse"));
+const http_status_1 = __importDefault(require("http-status"));
+const catchAsync_1 = __importDefault(require("../../utils/catchAsync"));
+// import { studentSchemaZod } from './student.validation';
+const createStudent = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const payload = req.body;
+    // const zodparsedData = studentSchemaZod.parse(payload);
+    const student = yield student_services_1.default.createStudentDB(payload);
+    // const student = await studentServices.createStudentDB(zodparsedData);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student Add Successfull',
+        data: student,
+    });
+}));
+const getAllStudents = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const students = yield student_services_1.default.getAllStudentsDB();
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: students,
+    });
+}));
+const getStudentById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield student_services_1.default.getStudentByIdDB(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: student,
+    });
+}));
+const getActiveStudents = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const students = yield student_services_1.default.getActiveStudentsDB();
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Active Student get Successfull',
+        data: students,
+    });
+}));
+const getInactiveStudents = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const students = yield student_services_1.default.getInactiveStudentsDB();
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Inactive Student get Successfull',
+        data: students,
+    });
+}));
+const getStudentByEmail = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield student_services_1.default.getStudentByEmailDB(req.params.email);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: student,
+    });
+}));
+const getStudentsByGender = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const students = yield student_services_1.default.getStudentsByGenderDB(req.params.gender);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: students,
+    });
+}));
+const getStudentsByBloodGroup = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const students = yield student_services_1.default.getStudentsByBloodGroupDB(req.params.bloodGroup);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: students,
+    });
+}));
+const updateStudentById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield student_services_1.default.updateStudentByIdDB(req.params.id, req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: student,
+    });
+}));
+const patchStudentById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield student_services_1.default.patchStudentByIdDB(req.params.id, req.body);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: student,
+    });
+}));
+const updateManyStudents = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield student_services_1.default.updateManyStudentsDB(req.body.filter, req.body.updateData);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: result,
+    });
+}));
+const deleteStudentById = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const student = yield student_services_1.default.deleteStudentByIdDB(req.params.id);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: student,
+    });
+}));
+const deleteManyStudents = (0, catchAsync_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield student_services_1.default.deleteManyStudentsDB(req.body.filter);
+    (0, sendResponse_1.default)(res, {
+        success: true,
+        statusCode: http_status_1.default.OK,
+        message: 'Student get Successfull',
+        data: result,
+    });
+}));
 const studentController = {
     createStudent,
     getAllStudents,

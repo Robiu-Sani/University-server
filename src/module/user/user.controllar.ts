@@ -1,169 +1,109 @@
-import { NextFunction, Request, Response } from 'express';
 // import { userValidationSchema } from './user.validation';
 import UserServices from './user.services';
 import sendResponse from '../../utils/sendResponse';
 import httpStatus from 'http-status';
+import catchAsync from '../../utils/catchAsync';
 
-const createUser = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const payload = req.body;
-    // const zodparsedData = userValidationSchema.parse(payload);
-    const User = await UserServices.createUserDB(payload);
-    // const User = await UserServices.createUserDB(zodparsedData);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: User,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const createUser = catchAsync(async (req, res) => {
+  const payload = req.body;
+  // const zodparsedData = userValidationSchema.parse(payload);
+  const User = await UserServices.createUserDB(payload);
+  // const User = await UserServices.createUserDB(zodparsedData);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: User,
+  });
+});
 
-const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const Users = await UserServices.getAllUsersDB();
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: Users,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const getAllUsers = catchAsync(async (req, res) => {
+  const Users = await UserServices.getAllUsersDB();
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: Users,
+  });
+});
 
-const getUserById = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const User = await UserServices.getUserByIdDB(req.params.id);
+const getUserById = catchAsync(async (req, res) => {
+  const User = await UserServices.getUserByIdDB(req.params.id);
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: User,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: User,
+  });
+});
 
-const getUserByFildName = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const payload = req.body;
-    const Users = await UserServices.getUserByFildDB(payload);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: Users,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const getUserByFildName = catchAsync(async (req, res) => {
+  const payload = req.body;
+  const Users = await UserServices.getUserByFildDB(payload);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: Users,
+  });
+});
 
-const updateUserById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const User = await UserServices.updateUserByIdDB(req.params.id, req.body);
+const updateUserById = catchAsync(async (req, res) => {
+  const User = await UserServices.updateUserByIdDB(req.params.id, req.body);
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: User,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: User,
+  });
+});
 
-const patchUserById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const User = await UserServices.patchUserByIdDB(req.params.id, req.body);
+const patchUserById = catchAsync(async (req, res) => {
+  const User = await UserServices.patchUserByIdDB(req.params.id, req.body);
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: User,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: User,
+  });
+});
 
-const updateManyUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const result = await UserServices.updateManyUsersDB(
-      req.body.filter,
-      req.body.updateData,
-    );
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const updateManyUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.updateManyUsersDB(
+    req.body.filter,
+    req.body.updateData,
+  );
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: result,
+  });
+});
 
-const deleteUserById = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const User = await UserServices.deleteUserByIdDB(req.params.id);
+const deleteUserById = catchAsync(async (req, res) => {
+  const User = await UserServices.deleteUserByIdDB(req.params.id);
 
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: User,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: User,
+  });
+});
 
-const deleteManyUsers = async (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-) => {
-  try {
-    const result = await UserServices.deleteManyUsersDB(req.body.filter);
-    sendResponse(res, {
-      success: true,
-      statusCode: httpStatus.OK,
-      message: 'user get Successfull',
-      data: result,
-    });
-  } catch (error) {
-    next(error);
-  }
-};
+const deleteManyUsers = catchAsync(async (req, res) => {
+  const result = await UserServices.deleteManyUsersDB(req.body.filter);
+  sendResponse(res, {
+    success: true,
+    statusCode: httpStatus.OK,
+    message: 'user get Successfull',
+    data: result,
+  });
+});
 
 const UserController = {
   createUser,

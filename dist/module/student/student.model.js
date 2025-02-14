@@ -76,12 +76,13 @@ const GuardianSchema = new mongoose_1.Schema({
 });
 // Main Schema
 const studentSchema = new mongoose_1.Schema({
+    user: { type: mongoose_1.default.Schema.Types.ObjectId, required: true, ref: 'Users' },
     id: {
         type: String,
         required: [true, 'Student ID is required'],
         unique: true,
-        minlength: [4, 'ID must be at least 4 characters long'],
-        maxlength: [10, 'ID cannot exceed 10 characters'],
+        minlength: [1, 'ID must be at least 1 characters long'],
+        maxlength: [20, 'ID cannot exceed 20 characters'],
     },
     name: NameSchema,
     gender: {

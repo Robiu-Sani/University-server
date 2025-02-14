@@ -12,20 +12,45 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const mongoose_1 = __importDefault(require("mongoose"));
+const user_model_1 = __importDefault(require("../user/user.model"));
 const student_model_1 = __importDefault(require("./student.model"));
-// Create a new student
 const createStudentDB = (studentData) => __awaiter(void 0, void 0, void 0, function* () {
-    const student = new student_model_1.default(studentData);
-    if (yield student.isStudentExits(studentData.id)) {
-        throw new Error('User is alrady exist');
+    const session = yield mongoose_1.default.startSession();
+    session.startTransaction();
+    try {
+        // Check if student already exists
+        const isStudentExist = yield student_model_1.default.findOne({
+            id: studentData.id,
+        }).session(session);
+        if (isStudentExist) {
+            throw new Error('User is already exist');
+        }
+        // Create a new user
+        const userData = yield user_model_1.default.create([{ id: studentData.id }], { session });
+        if (!userData || userData.length === 0) {
+            throw new Error('Something is wrong, user is not created');
+        }
+        // Create a student with reference to user
+        const payload = Object.assign(Object.assign({}, studentData), { user: userData[0]._id });
+        const newStudent = yield student_model_1.default.create([payload], { session });
+        if (!newStudent || newStudent.length === 0) {
+            throw new Error('Something is wrong, student is not created');
+        }
+        // Commit transaction if everything is successful
+        yield session.commitTransaction();
+        session.endSession();
+        return newStudent[0];
     }
-    return yield student.save();
-    // const result = await Student.create(studentData)
-    // return result
+    catch (error) {
+        yield session.abortTransaction(); // Rollback transaction if any error occurs
+        session.endSession();
+        throw error;
+    }
 });
 // Get all students
 const getAllStudentsDB = () => __awaiter(void 0, void 0, void 0, function* () {
-    return yield student_model_1.default.find();
+    return yield student_model_1.default.find().populate('user');
 });
 // Get a single student by ID
 const getStudentByIdDB = (id) => __awaiter(void 0, void 0, void 0, function* () {
