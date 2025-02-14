@@ -1,6 +1,7 @@
-import { Model } from 'mongoose';
+import { Model, ObjectId } from 'mongoose';
 
 export interface studentInterface {
+  user: ObjectId;
   id: string;
   name: {
     firstName: string;

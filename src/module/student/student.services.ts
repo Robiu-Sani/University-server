@@ -1,23 +1,56 @@
+import mongoose from 'mongoose';
+import User from '../user/user.model';
 import { studentInterface } from './student.interface';
 import Student from './student.model';
 
-// Create a new student
 const createStudentDB = async (studentData: studentInterface) => {
-  const student = new Student(studentData);
+  const session = await mongoose.startSession();
+  session.startTransaction();
 
-  if (await student.isStudentExits(studentData.id)) {
-    throw new Error('User is alrady exist');
+  try {
+    // Check if student already exists
+    const isStudentExist = await Student.findOne({
+      id: studentData.id,
+    }).session(session);
+
+    if (isStudentExist) {
+      throw new Error('User is already exist');
+    }
+
+    // Create a new user
+    const userData = await User.create([{ id: studentData.id }], { session });
+
+    if (!userData || userData.length === 0) {
+      throw new Error('Something is wrong, user is not created');
+    }
+
+    // Create a student with reference to user
+    const payload = {
+      ...studentData,
+      user: userData[0]._id,
+    };
+
+    const newStudent = await Student.create([payload], { session });
+
+    if (!newStudent || newStudent.length === 0) {
+      throw new Error('Something is wrong, student is not created');
+    }
+
+    // Commit transaction if everything is successful
+    await session.commitTransaction();
+    session.endSession();
+
+    return newStudent[0];
+  } catch (error) {
+    await session.abortTransaction(); // Rollback transaction if any error occurs
+    session.endSession();
+    throw error;
   }
-
-  return await student.save();
-
-  // const result = await Student.create(studentData)
-  // return result
 };
 
 // Get all students
 const getAllStudentsDB = async () => {
-  return await Student.find();
+  return await Student.find().populate('user');
 };
 
 // Get a single student by ID

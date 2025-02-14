@@ -1,105 +1,167 @@
-import { Request, Response } from 'express';
-import { userValidationSchema } from './user.validation';
+import { NextFunction, Request, Response } from 'express';
+// import { userValidationSchema } from './user.validation';
 import UserServices from './user.services';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
 
-// Create a new User
-const createUser = async (req: Request, res: Response) => {
+const createUser = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const payload = req.body;
-    const zodparsedData = userValidationSchema.parse(payload);
-    // const User = await UserServices.createUserDB(payload);
-    const User = await UserServices.createUserDB(zodparsedData);
-    res.status(201).json(User);
+    // const zodparsedData = userValidationSchema.parse(payload);
+    const User = await UserServices.createUserDB(payload);
+    // const User = await UserServices.createUserDB(zodparsedData);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: User,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Get all Users
-const getAllUsers = async (req: Request, res: Response) => {
+const getAllUsers = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const Users = await UserServices.getAllUsersDB();
-    res.status(200).json(Users);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: Users,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get a single User by ID
-const getUserById = async (req: Request, res: Response) => {
+const getUserById = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const User = await UserServices.getUserByIdDB(req.params.id);
 
-    res.status(200).json(User);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: User,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get all active Users
-const getUserByFildName = async (req: Request, res: Response) => {
+const getUserByFildName = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const payload = req.body;
     const Users = await UserServices.getUserByFildDB(payload);
-    res.status(200).json(Users);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: Users,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Update a User by ID (PUT)
-const updateUserById = async (req: Request, res: Response) => {
+const updateUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const User = await UserServices.updateUserByIdDB(req.params.id, req.body);
 
-    res.status(200).json(User);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: User,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Update a User by ID (PATCH)
-const patchUserById = async (req: Request, res: Response) => {
+const patchUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const User = await UserServices.patchUserByIdDB(req.params.id, req.body);
 
-    res.status(200).json(User);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: User,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Update many Users
-const updateManyUsers = async (req: Request, res: Response) => {
+const updateManyUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await UserServices.updateManyUsersDB(
       req.body.filter,
       req.body.updateData,
     );
-    res.status(200).json(result);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: result,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Delete a User by ID
-const deleteUserById = async (req: Request, res: Response) => {
+const deleteUserById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const User = await UserServices.deleteUserByIdDB(req.params.id);
 
-    res.status(200).json({ message: 'User deleted successfully', User });
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: User,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Delete many Users
-const deleteManyUsers = async (req: Request, res: Response) => {
+const deleteManyUsers = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await UserServices.deleteManyUsersDB(req.body.filter);
-    res.status(200).json(result);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'user get Successfull',
+      data: result,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 

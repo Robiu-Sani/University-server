@@ -1,154 +1,260 @@
-import { Request, Response } from 'express';
+import { NextFunction, Request, Response } from 'express';
 import studentServices from './student.services';
-import { studentSchemaZod } from './student.validation';
+import sendResponse from '../../utils/sendResponse';
+import httpStatus from 'http-status';
+// import { studentSchemaZod } from './student.validation';
 
-// Create a new student
-const createStudent = async (req: Request, res: Response) => {
+const createStudent = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const payload = req.body;
-    const zodparsedData = studentSchemaZod.parse(payload);
-    // const student = await studentServices.createStudentDB(payload);
-    const student = await studentServices.createStudentDB(zodparsedData);
-    res.status(201).json(student);
+    // const zodparsedData = studentSchemaZod.parse(payload);
+    const student = await studentServices.createStudentDB(payload);
+    // const student = await studentServices.createStudentDB(zodparsedData);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student Add Successfull',
+      data: student,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Get all students
-const getAllStudents = async (req: Request, res: Response) => {
+const getAllStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const students = await studentServices.getAllStudentsDB();
-    res.status(200).json(students);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: students,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get a single student by ID
-const getStudentById = async (req: Request, res: Response) => {
+const getStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const student = await studentServices.getStudentByIdDB(req.params.id);
 
-    res.status(200).json(student);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: student,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get all active students
-const getActiveStudents = async (req: Request, res: Response) => {
+const getActiveStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const students = await studentServices.getActiveStudentsDB();
-    res.status(200).json(students);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Active Student get Successfull',
+      data: students,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get all inactive students
-const getInactiveStudents = async (req: Request, res: Response) => {
+const getInactiveStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const students = await studentServices.getInactiveStudentsDB();
-    res.status(200).json(students);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Inactive Student get Successfull',
+      data: students,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get a student by email
-const getStudentByEmail = async (req: Request, res: Response) => {
+const getStudentByEmail = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const student = await studentServices.getStudentByEmailDB(req.params.email);
-    res.status(200).json(student);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: student,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get students by gender
-const getStudentsByGender = async (req: Request, res: Response) => {
+const getStudentsByGender = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const students = await studentServices.getStudentsByGenderDB(
       req.params.gender,
     );
-    res.status(200).json(students);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: students,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Get students by blood group
-const getStudentsByBloodGroup = async (req: Request, res: Response) => {
+const getStudentsByBloodGroup = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const students = await studentServices.getStudentsByBloodGroupDB(
       req.params.bloodGroup,
     );
-    res.status(200).json(students);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: students,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Update a student by ID (PUT)
-const updateStudentById = async (req: Request, res: Response) => {
+const updateStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const student = await studentServices.updateStudentByIdDB(
       req.params.id,
       req.body,
     );
 
-    res.status(200).json(student);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: student,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Update a student by ID (PATCH)
-const patchStudentById = async (req: Request, res: Response) => {
+const patchStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const student = await studentServices.patchStudentByIdDB(
       req.params.id,
       req.body,
     );
 
-    res.status(200).json(student);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: student,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Update many students
-const updateManyStudents = async (req: Request, res: Response) => {
+const updateManyStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await studentServices.updateManyStudentsDB(
       req.body.filter,
       req.body.updateData,
     );
-    res.status(200).json(result);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: result,
+    });
   } catch (error) {
-    res.status(400).json({ error });
+    next(error);
   }
 };
 
-// Delete a student by ID
-const deleteStudentById = async (req: Request, res: Response) => {
+const deleteStudentById = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const student = await studentServices.deleteStudentByIdDB(req.params.id);
 
-    res.status(200).json({ message: 'Student deleted successfully', student });
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: student,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
-// Delete many students
-const deleteManyStudents = async (req: Request, res: Response) => {
+const deleteManyStudents = async (
+  req: Request,
+  res: Response,
+  next: NextFunction,
+) => {
   try {
     const result = await studentServices.deleteManyStudentsDB(req.body.filter);
-    res.status(200).json(result);
+    sendResponse(res, {
+      success: true,
+      statusCode: httpStatus.OK,
+      message: 'Student get Successfull',
+      data: result,
+    });
   } catch (error) {
-    res.status(500).json({ error });
+    next(error);
   }
 };
 
