@@ -153,6 +153,11 @@ const studentSchema = new mongoose_1.Schema({
         required: false,
         ref: 'AcademicSemester',
     },
+    department: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        required: false,
+        ref: 'department',
+    },
     isActive: {
         type: String,
         enum: ['active', 'inActive'],

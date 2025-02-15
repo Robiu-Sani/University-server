@@ -1,0 +1,21 @@
+import mongoose from "mongoose";
+
+async function runTransaction() {
+    const session = await mongoose.startSession();
+    session.startTransaction();
+    
+    try {
+        await User.updateOne({ _id: userId }, { balance: newBalance }, { session });
+        await Order.create([{ userId, productId, amount }], { session });
+
+        await session.commitTransaction();
+        console.log("Transaction successful!");
+    } catch (error) {
+        await session.abortTransaction();
+        console.error("Transaction failed:", error);
+    } finally {
+        session.endSession();
+    }
+}
+
+runTransaction();

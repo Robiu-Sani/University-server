@@ -18,6 +18,7 @@ export interface studentInterface {
   bloodGroup?: 'A+' | 'O+' | 'A-' | 'B+' | 'B-' | 'AB+' | 'AB-' | 'O-';
   presentAddress: string;
   permanentAddress: string;
+  department: ObjectId;
   guardian: {
     name: string;
     occupation: string;
