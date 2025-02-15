@@ -76,7 +76,11 @@ const GuardianSchema = new mongoose_1.Schema({
 });
 // Main Schema
 const studentSchema = new mongoose_1.Schema({
-    user: { type: mongoose_1.default.Schema.Types.ObjectId, required: true, ref: 'Users' },
+    user: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        required: true,
+        ref: 'Users',
+    },
     id: {
         type: String,
         required: [true, 'Student ID is required'],
@@ -90,6 +94,7 @@ const studentSchema = new mongoose_1.Schema({
         enum: ['male', 'female'],
         required: [true, 'Gender is required'],
     },
+    roll: { type: Number, required: true },
     email: {
         type: String,
         required: [true, 'Email is required'],
@@ -115,7 +120,10 @@ const studentSchema = new mongoose_1.Schema({
     emergencyContactNumber: {
         type: String,
         required: [true, 'Emergency contact number is required'],
-        match: [/^01[3-9]\d{8}$/, 'Please enter a valid emergency contact number'],
+        match: [
+            /^01[3-9]\d{8}$/,
+            'Please enter a valid emergency contact number',
+        ],
     },
     bloodGroup: {
         type: String,
@@ -135,14 +143,22 @@ const studentSchema = new mongoose_1.Schema({
     guardian: GuardianSchema,
     profileImage: {
         type: String,
-        match: [/^https?:\/\/.+\.(jpg|jpeg|png|gif)$/, 'Invalid profile image URL'],
+        match: [
+            /^https?:\/\/.+\.(jpg|jpeg|png|gif)$/,
+            'Invalid profile image URL',
+        ],
+    },
+    samester: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        required: false,
+        ref: 'AcademicSemester',
     },
     isActive: {
         type: String,
         enum: ['active', 'inActive'],
         default: 'active',
     },
-});
+}, { timestamps: true });
 //defining
 studentSchema.methods.isStudentExits = (id) => __awaiter(void 0, void 0, void 0, function* () {
     const isExistStudent = Student.findOne({ id });

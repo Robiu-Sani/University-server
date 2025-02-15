@@ -2,6 +2,7 @@ import { Model, ObjectId } from 'mongoose';
 
 export interface studentInterface {
   user: ObjectId;
+  roll: number;
   id: string;
   name: {
     firstName: string;
@@ -23,6 +24,7 @@ export interface studentInterface {
     contactNumber: string;
   };
   profileImage?: string;
+  samester?: ObjectId;
   isActive: 'active' | 'inActive';
 }
 

@@ -19,31 +19,39 @@ const createStudentDB = (studentData) => __awaiter(void 0, void 0, void 0, funct
     const session = yield mongoose_1.default.startSession();
     session.startTransaction();
     try {
-        // Check if student already exists
-        const isStudentExist = yield student_model_1.default.findOne({
-            id: studentData.id,
-        }).session(session);
+        let roll = 1; // প্রথম রোল 1 হবে
+        let id = '';
+        // সর্বশেষ শিক্ষার্থীর তথ্য খোঁজা
+        const lastStudent = yield student_model_1.default.findOne().sort({ createdAt: -1 });
+        if (lastStudent) {
+            roll = lastStudent.roll + 1; // পূর্ববর্তী শিক্ষার্থীর রোল +1
+        }
+        // আইডি তৈরি (ph000001 ফরম্যাট)
+        id = 'ph' + String(roll).padStart(6, '0');
+        // চেক করুন যে শিক্ষার্থী ইতোমধ্যে বিদ্যমান কিনা
+        const isStudentExist = yield student_model_1.default.findOne({ id }).session(session);
         if (isStudentExist) {
-            throw new Error('User is already exist');
+            throw new Error('User already exists');
         }
-        // Create a new user
-        const userData = yield user_model_1.default.create([{ id: studentData.id }], { session });
+        // নতুন ব্যবহারকারী তৈরি
+        const userData = yield user_model_1.default.create([{ id }], { session });
         if (!userData || userData.length === 0) {
-            throw new Error('Something is wrong, user is not created');
+            throw new Error('Something went wrong, user is not created');
         }
-        // Create a student with reference to user
-        const payload = Object.assign(Object.assign({}, studentData), { user: userData[0]._id });
+        // নতুন শিক্ষার্থী তৈরি (User রেফারেন্স সহ)
+        const payload = Object.assign(Object.assign({}, studentData), { id,
+            roll, user: userData[0]._id });
         const newStudent = yield student_model_1.default.create([payload], { session });
         if (!newStudent || newStudent.length === 0) {
-            throw new Error('Something is wrong, student is not created');
+            throw new Error('Something went wrong, student is not created');
         }
-        // Commit transaction if everything is successful
+        // যদি সবকিছু সফল হয়, তাহলে কমিট করুন
         yield session.commitTransaction();
         session.endSession();
         return newStudent[0];
     }
     catch (error) {
-        yield session.abortTransaction(); // Rollback transaction if any error occurs
+        yield session.abortTransaction(); // কোনো সমস্যা হলে ট্রানজেকশন বাতিল
         session.endSession();
         throw error;
     }
